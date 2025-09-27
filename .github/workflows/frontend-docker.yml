@@ -23,7 +23,7 @@ jobs:
       - name: Build Frontend Docker Image
         run: |
           cd Front-end
-          docker build -t your-dockerhub-username/social-media-frontend:latest .
+          docker build -t riteshkumarv/social-media-frontend:latest .
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -32,4 +32,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push Frontend Docker Image
-        run: docker push your-dockerhub-username/social-media-frontend:latest
+        run: docker push riteshkumarv/social-media-frontend:latest

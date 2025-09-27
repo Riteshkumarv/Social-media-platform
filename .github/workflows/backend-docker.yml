@@ -34,7 +34,7 @@ jobs:
       - name: Build Docker image
         run: |
           cd Back-end
-          docker build -t your-dockerhub-username/social-media-backend:latest .
+          docker build -t riteshkumarv/social-media-backend:latest .
 
       - name: Push Docker image
-        run: docker push your-dockerhub-username/social-media-backend:latest
+        run: docker push riteshkumarv/social-media-backend:latest
