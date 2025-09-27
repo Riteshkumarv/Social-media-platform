@@ -1,0 +1,16 @@
+# Ignore Maven / Gradle output
+target/
+build/
+
+# Ignore IDE files
+*.iml
+.idea/
+.vscode/
+*.class
+
+# Ignore git files
+.git
+.gitignore
+
+# Ignore environment files
+.env

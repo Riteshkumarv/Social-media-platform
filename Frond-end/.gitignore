@@ -19,9 +19,6 @@
 .env.production.local
 .env
 
-#dockerfile
-dockerfile
-
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

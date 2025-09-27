@@ -22,8 +22,6 @@ target/
 *.env
 .env
 
-dockerfile
-
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
