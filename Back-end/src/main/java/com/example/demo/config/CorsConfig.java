@@ -16,8 +16,8 @@ public class CorsConfig {
                 registry.addMapping("/**") // allow all endpoints
                         .allowedOrigins(
                                 "http://localhost:3000", // Local frontend
-                                "https://frontend-production-0e87.up.railway.app/", // Deployed frontend
-                                "https://frontend-production-0e87.up.railway.app"
+                                "https://frontend-production-0e87.up.railway.app", // Deployed frontend
+                                "https://frontend-production-0e87.up.railway.app/"
                         )
                         .allowedMethods("*")
                         .allowedHeaders("*")
