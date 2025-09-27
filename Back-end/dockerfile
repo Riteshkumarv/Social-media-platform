@@ -1,12 +1,8 @@
 FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 
-# Copy the JAR built by GitHub Actions
-COPY target/*.jar app.jar
+# Copy the JAR we prepared in the workflow
+COPY app.jar app.jar
 
-# Expose port
 EXPOSE 8080
-
-# Run the JAR
-ENTRYPOINT ["java", "-jar", "app.jar"]
-
+ENTRYPOINT ["java","-jar","app.jar"]
