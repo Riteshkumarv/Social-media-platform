@@ -1,0 +1,10 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Backend build
+Back-end/target/
+
+# Frontend build
+Front-end/node_modules/
+Front-end/build/
