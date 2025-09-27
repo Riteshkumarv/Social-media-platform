@@ -31,11 +31,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(Arrays.asList(
-                "http://localhost:3000", // Local frontend
-                "https://frontend-production-0e87.up.railway.app/",
-                "https://frontend-production-0e87.up.railway.app" // Deployed frontend
-        ));
+        config.setAllowedOriginPatterns(Arrays.asList("*")); // Allow all origins
         config.setAllowedMethods(Arrays.asList("*"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setAllowCredentials(true);

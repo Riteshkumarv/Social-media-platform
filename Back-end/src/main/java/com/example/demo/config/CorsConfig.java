@@ -14,11 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // allow all endpoints
-                        .allowedOrigins(
-                                "http://localhost:3000", // Local frontend
-                                "https://frontend-production-0e87.up.railway.app/", // Deployed frontend
-                                "https://frontend-production-0e87.up.railway.app"
-                        )
+                        .allowedOrigins("*")
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .allowCredentials(true);
