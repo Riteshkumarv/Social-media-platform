@@ -33,8 +33,8 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOriginPatterns(Arrays.asList(
                 "http://localhost:3000", // Local frontend
-                "https://frontend-production-0e87.up.railway.app",
-                "https://frontend-production-0e87.up.railway.app/" // Deployed frontend
+                "https://frontend-production-0e87.up.railway.app/",
+                "https://frontend-production-0e87.up.railway.app" // Deployed frontend
         ));
         config.setAllowedMethods(Arrays.asList("*"));
         config.setAllowedHeaders(Arrays.asList("*"));

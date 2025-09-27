@@ -38,7 +38,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t riteshkumarv/social-media-backend:latest Back-end
+          docker build -t riteshkumarv/backend:latest Back-end
 
       - name: Push Docker image
-        run: docker push riteshkumarv/social-media-backend:latest
+        run: docker push riteshkumarv/backend:latest
