@@ -1,7 +1,8 @@
 import axios from "axios";
+import config from "../Config/config";
 
 // Prefer runtime config from public/config.js, fallback to build-time env
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = config.API_BASE_URL;
 
 const api = axios.create({
   baseURL: API_URL,
