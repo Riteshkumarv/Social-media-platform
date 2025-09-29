@@ -34,8 +34,12 @@ public class SecurityConfig {
         // Allowed frontend origins
         apiCors.setAllowedOriginPatterns(Arrays.asList(
                 "http://localhost:3000",                      // local frontend
-                "https://frontend-production-0e87.up.railway.app" // prod frontend
+                "https://frontend-production-0e87.up.railway.app", // prod frontend
+                "http://localhost:8080",                     // local swagger/ui same-origin
+                "https://backend-production-6085.up.railway.app" // prod backend swagger/ui same-origin
         ));
+
+        
         apiCors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         apiCors.setAllowedHeaders(Arrays.asList("*"));
         apiCors.setAllowCredentials(true); // allow cookies / JWT

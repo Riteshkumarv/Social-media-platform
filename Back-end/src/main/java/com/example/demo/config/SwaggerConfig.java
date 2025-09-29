@@ -12,15 +12,10 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        // Local backend (for testing)
-        Server localServer = new Server();
-        localServer.setUrl("http://localhost:8080");
+        // Use relative server so Swagger UI targets the current host (works in dev and prod)
+        Server relativeServer = new Server();
+        relativeServer.setUrl("/");
 
-        // Production backend
-        Server prodServer = new Server();
-        prodServer.setUrl("https://backend-production-6085.up.railway.app");
-
-        // Include both servers
-        return new OpenAPI().servers(List.of(localServer, prodServer));
+        return new OpenAPI().servers(List.of(relativeServer));
     }
 }
