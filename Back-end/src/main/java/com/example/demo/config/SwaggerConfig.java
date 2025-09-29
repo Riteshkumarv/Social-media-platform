@@ -12,11 +12,11 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        Server prodServer = new Server();
-        prodServer.setUrl("https://backend-production-6085.up.railway.app");
-
         Server localServer = new Server();
-        localServer.setUrl("http://localhost:8080");
+        localServer.setUrl("http://localhost:8080"); // local backend
+
+        Server prodServer = new Server();
+        prodServer.setUrl("https://backend-production-6085.up.railway.app"); // prod backend
 
         return new OpenAPI()
                 .servers(List.of(localServer, prodServer));
