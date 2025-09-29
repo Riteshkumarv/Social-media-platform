@@ -7,11 +7,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -30,26 +30,25 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration apiCors = new CorsConfiguration();
+
+        // Allowed frontend origins
         apiCors.setAllowedOriginPatterns(Arrays.asList(
-                "http://localhost:3000",                     // dev frontend
+                "http://localhost:3000",                      // local frontend
                 "https://frontend-production-0e87.up.railway.app" // prod frontend
         ));
         apiCors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         apiCors.setAllowedHeaders(Arrays.asList("*"));
-        apiCors.setAllowCredentials(true); // JWT / cookies allowed
+        apiCors.setAllowCredentials(true); // allow cookies / JWT
 
+        // Swagger can be accessed from anywhere
         CorsConfiguration swaggerCors = new CorsConfiguration();
-        swaggerCors.setAllowedOriginPatterns(Arrays.asList(
-                "http://localhost:3000",
-                "https://frontend-production-0e87.up.railway.app",
-                "https://backend-production-6085.up.railway.app"
-        ));
+        swaggerCors.setAllowedOriginPatterns(Arrays.asList("*"));
         swaggerCors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         swaggerCors.setAllowedHeaders(Arrays.asList("*"));
-        swaggerCors.setAllowCredentials(true);
+        swaggerCors.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", apiCors);
+        source.registerCorsConfiguration("/**", apiCors);             // all API endpoints
         source.registerCorsConfiguration("/swagger-ui/**", swaggerCors);
         source.registerCorsConfiguration("/v3/api-docs/**", swaggerCors);
 

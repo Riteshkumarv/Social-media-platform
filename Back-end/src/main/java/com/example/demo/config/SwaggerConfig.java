@@ -4,7 +4,6 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import java.util.List;
 
@@ -12,18 +11,16 @@ import java.util.List;
 public class SwaggerConfig {
 
     @Bean
-    @Profile("dev") // Local dev only
-    public OpenAPI swaggerDevOpenAPI() {
+    public OpenAPI customOpenAPI() {
+        // Local backend (for testing)
         Server localServer = new Server();
         localServer.setUrl("http://localhost:8080");
-        return new OpenAPI().servers(List.of(localServer));
-    }
 
-    @Bean
-    @Profile("prod") // Production only
-    public OpenAPI swaggerProdOpenAPI() {
+        // Production backend
         Server prodServer = new Server();
         prodServer.setUrl("https://backend-production-6085.up.railway.app");
-        return new OpenAPI().servers(List.of(prodServer));
+
+        // Include both servers
+        return new OpenAPI().servers(List.of(localServer, prodServer));
     }
 }
