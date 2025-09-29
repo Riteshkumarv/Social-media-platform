@@ -31,7 +31,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(Arrays.asList("*")); // Allow all origins
+        config.setAllowedOrigins(Arrays.asList(
+                "https://frontend-production-0e87.up.railway.app",
+                "https://backend-production-6085.up.railway.app"
+        ));
         config.setAllowedMethods(Arrays.asList("*"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setAllowCredentials(true);
@@ -44,11 +47,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Use global config
+                // Enable CORS with your global config
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ✅ Allow preflight requests
+                        // Allow preflight requests (OPTIONS)
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // Swagger + auth + reset password flows
                         .requestMatchers(
                                 "/auth/**",
                                 "/v3/api-docs/**",
@@ -60,15 +67,22 @@ public class SecurityConfig {
                                 "/enter-OTP/**",
                                 "/enter-new-password/**"
                         ).permitAll()
+
+                        // Role-based endpoints
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
+
+                        // Picture APIs secured
                         .requestMatchers(HttpMethod.GET, "/api/pictures/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/pictures/**").authenticated()
+
+                        // Everything else requires auth
                         .anyRequest().authenticated()
                 )
+                // Stateless sessions (for JWT)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // Add JWT filter
+        // Add JWT filter before UsernamePasswordAuthenticationFilter
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
