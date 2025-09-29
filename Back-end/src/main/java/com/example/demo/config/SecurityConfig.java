@@ -27,35 +27,46 @@ public class SecurityConfig {
         this.jwtFilter = jwtFilter;
     }
 
-    // ✅ Global CORS configuration
+    /**
+     * Global CORS configuration
+     * Supports local dev, Swagger, and production domains
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
+
+        // ✅ Use allowedOriginPatterns with allowCredentials
         config.setAllowedOriginPatterns(Arrays.asList(
+                "http://localhost:3000",                         // React frontend local
+                "http://localhost:8080",                         // Swagger local
                 "https://frontend-production-0e87.up.railway.app",
                 "https://backend-production-6085.up.railway.app"
         ));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
-        config.setAllowCredentials(true);
+        config.setAllowCredentials(true); // allow cookies/auth headers
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
+
         return source;
     }
 
+    /**
+     * Spring Security filter chain
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Enable CORS with global config
+                // Enable CORS using the global configuration
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .authorizeHttpRequests(auth -> auth
-                        // Allow preflight requests (OPTIONS)
+                        // Allow preflight requests
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // Public endpoints (Swagger, auth, reset flows)
+                        // Public endpoints
                         .requestMatchers(
                                 "/auth/**",
                                 "/api/auth/**",
@@ -76,13 +87,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/pictures/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/pictures/**").authenticated()
 
-                        // All other requests require auth
+                        // All other requests require authentication
                         .anyRequest().authenticated()
                 )
                 // Stateless sessions
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // ✅ Add JWT filter before UsernamePasswordAuthenticationFilter
+        // Add JWT filter before UsernamePasswordAuthenticationFilter
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
