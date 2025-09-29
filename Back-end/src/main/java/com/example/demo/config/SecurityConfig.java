@@ -43,10 +43,15 @@ public class SecurityConfig {
         apiCors.setAllowCredentials(true); // cookies/auth allowed
 
         CorsConfiguration swaggerCors = new CorsConfiguration();
-        swaggerCors.setAllowedOriginPatterns(Arrays.asList("*")); // allow any origin
+        swaggerCors.setAllowedOriginPatterns(Arrays.asList(
+                "http://localhost:3000",
+                "https://frontend-production-0e87.up.railway.app",
+                "https://backend-production-6085.up.railway.app"
+        )); // same as API
         swaggerCors.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","OPTIONS"));
         swaggerCors.setAllowedHeaders(Arrays.asList("*"));
-        swaggerCors.setAllowCredentials(false); // no cookies needed
+        swaggerCors.setAllowCredentials(true); // ✅ allow JWT/auth
+
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", apiCors);           // all API endpoints
