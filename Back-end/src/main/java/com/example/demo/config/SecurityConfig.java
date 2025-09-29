@@ -33,24 +33,29 @@ public class SecurityConfig {
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-
-        // ✅ Use allowedOriginPatterns with allowCredentials
-        config.setAllowedOriginPatterns(Arrays.asList(
-                "http://localhost:3000",                         // React frontend local
-                "http://localhost:8080",                         // Swagger local
-                "https://frontend-production-0e87.up.railway.app",
-                "https://backend-production-6085.up.railway.app"
+        CorsConfiguration apiCors = new CorsConfiguration();
+        apiCors.setAllowedOriginPatterns(Arrays.asList(
+                "http://localhost:3000", // local React
+                "https://frontend-production-0e87.up.railway.app" // production frontend
         ));
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(Arrays.asList("*"));
-        config.setAllowCredentials(true); // allow cookies/auth headers
+        apiCors.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","OPTIONS"));
+        apiCors.setAllowedHeaders(Arrays.asList("*"));
+        apiCors.setAllowCredentials(true); // cookies/auth allowed
+
+        CorsConfiguration swaggerCors = new CorsConfiguration();
+        swaggerCors.setAllowedOriginPatterns(Arrays.asList("*")); // allow any origin
+        swaggerCors.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","OPTIONS"));
+        swaggerCors.setAllowedHeaders(Arrays.asList("*"));
+        swaggerCors.setAllowCredentials(false); // no cookies needed
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("/**", apiCors);           // all API endpoints
+        source.registerCorsConfiguration("/swagger-ui/**", swaggerCors); // swagger UI
+        source.registerCorsConfiguration("/v3/api-docs/**", swaggerCors); // swagger docs
 
         return source;
     }
+
 
     /**
      * Spring Security filter chain
