@@ -96,7 +96,7 @@ export default function LoginForm() {
           <h2
             style={{ textAlign: "center", marginBottom: "20px", color: "#333" }}
           >
-            Login
+            LOGIN
           </h2>
 
           {error && (
