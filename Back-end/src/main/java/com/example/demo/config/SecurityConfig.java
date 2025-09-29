@@ -27,70 +27,53 @@ public class SecurityConfig {
         this.jwtFilter = jwtFilter;
     }
 
-    // Global CORS configuration
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        // ----- API CORS (frontend calls backend) -----
         CorsConfiguration apiCors = new CorsConfiguration();
         apiCors.setAllowedOriginPatterns(Arrays.asList(
-                "http://localhost:3000",                    // local React
+                "http://localhost:3000",                     // dev frontend
                 "https://frontend-production-0e87.up.railway.app" // prod frontend
         ));
         apiCors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         apiCors.setAllowedHeaders(Arrays.asList("*"));
-        apiCors.setAllowCredentials(true); // cookies / JWT allowed
+        apiCors.setAllowCredentials(true); // JWT / cookies allowed
 
-        // ----- Swagger CORS (Swagger calls backend) -----
         CorsConfiguration swaggerCors = new CorsConfiguration();
-        swaggerCors.setAllowedOriginPatterns(Arrays.asList("*")); // allow all origins
+        swaggerCors.setAllowedOriginPatterns(Arrays.asList(
+                "http://localhost:3000",
+                "https://frontend-production-0e87.up.railway.app",
+                "https://backend-production-6085.up.railway.app"
+        ));
         swaggerCors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         swaggerCors.setAllowedHeaders(Arrays.asList("*"));
-        swaggerCors.setAllowCredentials(false); // no JWT / cookies needed
+        swaggerCors.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", apiCors);           // API endpoints
-        source.registerCorsConfiguration("/swagger-ui/**", swaggerCors); // Swagger UI
-        source.registerCorsConfiguration("/v3/api-docs/**", swaggerCors); // Swagger docs
+        source.registerCorsConfiguration("/**", apiCors);
+        source.registerCorsConfiguration("/swagger-ui/**", swaggerCors);
+        source.registerCorsConfiguration("/v3/api-docs/**", swaggerCors);
 
         return source;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                // Enable CORS
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                // Disable CSRF
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .authorizeHttpRequests(auth -> auth
-                        // Preflight requests
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        // Public endpoints
                         .requestMatchers(
                                 "/auth/**",
                                 "/api/auth/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/h2-console/**",
-                                "/forgot-password/**",
-                                "/enter-OTP/**",
-                                "/enter-new-password/**"
+                                "/swagger-ui.html"
                         ).permitAll()
-                        // Role-based endpoints
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**").hasRole("USER")
-                        // Secured APIs
-                        .requestMatchers(HttpMethod.GET, "/api/pictures/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/api/pictures/**").authenticated()
-                        // All other requests need authentication
                         .anyRequest().authenticated()
                 )
-                // Stateless sessions
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // Add JWT filter
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
