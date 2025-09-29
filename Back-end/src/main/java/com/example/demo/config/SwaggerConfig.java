@@ -4,27 +4,23 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
 
-
     @Bean
-    @Profile("dev") // only active in dev
-    public OpenAPI swaggerDevOpenAPI() {
+    public OpenAPI customOpenAPI() {
+        // Local backend (for local testing)
         Server localServer = new Server();
         localServer.setUrl("http://localhost:8080");
-        return new OpenAPI().servers(List.of(localServer));
-    }
 
-    @Bean
-    @Profile("prod") // only active in prod
-    public OpenAPI swaggerProdOpenAPI() {
+        // Production backend (for deployed app)
         Server prodServer = new Server();
         prodServer.setUrl("https://backend-production-6085.up.railway.app");
-        return new OpenAPI().servers(List.of(prodServer));
+
+        // Include both; Swagger UI lets you select which server to call
+        return new OpenAPI().servers(List.of(localServer, prodServer));
     }
 }
