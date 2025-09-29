@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const runtimeApiUrl = typeof window !== "undefined" && window.__ENV__ && window.__ENV__.API_URL;
-const API_URL = process.env.REACT_APP_API_URL || runtimeApiUrl;
+const API_URL = process.env.REACT_APP_API_URL;
 
 const apiFetch = axios.create({
   baseURL: API_URL,

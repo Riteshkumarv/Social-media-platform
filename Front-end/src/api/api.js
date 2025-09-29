@@ -1,8 +1,7 @@
 import axios from "axios";
 
 // Prefer runtime config from public/config.js, fallback to build-time env
-const runtimeApiUrl = typeof window !== "undefined" && window.__ENV__ && window.__ENV__.API_URL;
-const API_URL = process.env.REACT_APP_API_URL || runtimeApiUrl ;
+const API_URL = process.env.REACT_APP_API_URL;
 
 const api = axios.create({
   baseURL: API_URL,
