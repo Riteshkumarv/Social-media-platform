@@ -11,18 +11,16 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
-    // Local Swagger (dev only)
     @Bean
-    @Profile("dev")
+    @Profile("dev") // Local dev only
     public OpenAPI swaggerDevOpenAPI() {
         Server localServer = new Server();
         localServer.setUrl("http://localhost:8080");
         return new OpenAPI().servers(List.of(localServer));
     }
 
-    // Production Swagger
     @Bean
-    @Profile("prod")
+    @Profile("prod") // Production only
     public OpenAPI swaggerProdOpenAPI() {
         Server prodServer = new Server();
         prodServer.setUrl("https://backend-production-6085.up.railway.app");
